@@ -19,16 +19,16 @@
     <div class="clock">
 
         <div class="clock face">
-            <h1 id="timeReadout">20 : 50 : 31</h1>
+            <h1 id="timeReadout">XX : XX : XX</h1>
             <h3 id="dateReadout"></h3>
         </div>
 
         <div class="clock hand">
-            <img src="assets/ClockHand.png" id="hours"/>
+            <img src="assets/ClockHand.png" id="hours" alt="Hours outer-circle indicator hand"/>
         </div>
 
         <div class="clock hand">
-            <img src="assets/ClockHand.png" id="minutes"/>
+            <img src="assets/ClockHand.png" id="minutes" alt="Minutes outer-circle indicator hand"/>
         </div>
 
     </div>
@@ -78,7 +78,21 @@
 
 </script>
 
+<!--<script type="text/javascript" src="assets/clock.old"></script>-->
+<script type="text/javascript" src="assets/formatters.js"></script>
 <script type="text/javascript" src="assets/clock.exe.js"></script>
+
+<script type="text/javascript">
+    window.onload = function() {
+        const analog = new AnalogClockRenderer('#clock');
+        const digital = new DigitalClockRenderer('#clock');
+
+        const clock = new Clock();
+
+        clock.registerListener('analog', analog.update.bind(analog));
+        clock.registerListener('digital', digital.update.bind(digital));
+    }
+</script>
 
 <script type="text/javascript" src="assets/util.js"></script>
 </html>

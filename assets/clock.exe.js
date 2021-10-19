@@ -1,95 +1,115 @@
-const langs = ["eng"];
-let selectedLanguage = langs[0],
-    lang = null;
+class Clock {
+    constructor() {
+        this.currentTime = new Date();
 
+        this._loop = setInterval(this._update.bind(this), 1000);
 
-function loadLanguage() {
-    fetch(`/dates.${selectedLanguage}.json`).then((res) => {
-        res.json().then((language) => {
-            lang = language;
-            update();
-        });
-    })
-}
+        this._listeners = {};
+    }
 
-loadLanguage();
+    registerListener(name, cb) {
+        this._listeners[name] = cb;
+    }
 
-function getDateEnding(dayOfMonth) {
-    if (dayOfMonth < 11 || dayOfMonth > 19) {
-        if (dayOfMonth.toString().endsWith("1")) {
-            return "st";
-        } else if (dayOfMonth.toString().endsWith("2")) {
-            return "nd";
-        } else if (dayOfMonth.toString().endsWith("3")) {
-            return "rd";
+    deregisterListener(name) {
+        delete this._listeners[name];
+    }
+
+    _update() {
+        const currentTime = new Date(),
+            hourProgress = this.currentTime.getHours() / 12,
+            minuteProgress = this.currentTime.getMinutes() / 60;
+
+        const event = new ClockUpdateEvent(currentTime, hourProgress, minuteProgress);
+
+        for (let name in this._listeners) {
+            this._listeners[name](event);
         }
     }
-    return "th";
-}
 
-let currentTime = new Date(),
-    timeOut = document.getElementById("timeReadout"),
-    dateOut = document.getElementById("dateReadout");
-
-function pad(text, len) {
-    if (arguments.length < 2) {
-        len = 2;
-    }
-    if (typeof text !== "string") {
-        text = text.toString();
-    }
-
-    while (text.length < len) {
-        text = "0" + text;
-    }
-
-    return text;
-}
-
-function updateTime() {
-    currentTime = new Date();
-}
-
-function updateDigital() {
-    const hours = pad(currentTime.getHours()),
-        mins = pad(currentTime.getMinutes()),
-        secs = pad(currentTime.getSeconds());
-
-    timeOut.innerHTML = `${hours} : ${mins} : ${secs}`;
-
-    if (lang) {
-        const dayOfWeek = lang.daysOfWeek[currentTime.getDay()],
-            dayOfMonth = currentTime.getDate(),
-            monthName = lang.months[currentTime.getMonth()],
-            year = currentTime.getFullYear(),
-            ending = getDateEnding(dayOfMonth);
-
-        dateOut.innerHTML = `${dayOfWeek} &nbsp; ${dayOfMonth}${ending} &nbsp; ${monthName} ${year}`;
+    deregister() {
+        clearInterval(this._loop);
     }
 }
 
-function updateAnalog() {
-    const
-        hourPercent = currentTime.getHours() / 12,
-        minPercent = currentTime.getMinutes() / 60,
-        hourHand = document.getElementById("hours"),
-        minHand = document.getElementById("minutes"),
-
-        hourDegrees = simplifyRotation(hourPercent * 360),
-        minuteDegrees = simplifyRotation(minPercent * 360);
-
-    hourHand.style.transform = `rotate(${hourDegrees}deg)`;
-    minHand.style.transform = `rotate(${minuteDegrees}deg)`;
+class ClockUpdateEvent {
+    constructor(currentTime, hourProgress, minuteProgress) {
+        this.currentTime = currentTime;
+        this.hourProgress = hourProgress;
+        this.minuteProgress = minuteProgress;
+    }
 }
 
-function update() {
-    updateTime();
+class AnalogClockRenderer {
+    constructor(containerSelector) {
+        const container = document.querySelector(containerSelector);
 
-    updateDigital();
+        if (container) {
+            this._elems = {
+                hour_hand: container.querySelector('#hours'),
+                minute_hand: container.querySelector('#minutes'),
+            };
 
-    updateAnalog();
+        } else {
+            throw new Error("Container Selector must match a valid DOM element.");
+        }
+    }
+
+    update(event) {
+        const { hourProgress, minuteProgress } = event;
+
+        let hh = this._elems.hour_hand,
+            mh = this._elems.minute_hand;
+
+        if (!hh || !mh)
+            return
+
+        const hourDegrees = simplifyRotation(hourProgress * 360),
+            minuteDegrees = simplifyRotation(minuteProgress * 360);
+
+        hh.style.transform = `rotate(${hourDegrees}deg)`;
+        mh.style.transform = `rotate(${minuteDegrees}deg)`;
+    }
 }
 
-// update();
+class DigitalClockRenderer {
+    constructor(containerSelector, options) {
+        const container = document.querySelector(containerSelector);
+        this._options = options || {};
 
-window.setInterval(update, 1000);
+        if (container) {
+            // Initialise/set elems
+            this._elems = {
+                timeReadout: container.querySelector('#timeReadout'),
+                dateReadout: container.querySelector('#dateReadout')
+            };
+
+        } else {
+            throw new Error("Container Selector must match a valid DOM element.");
+        }
+    }
+
+    update(event) {
+        const { currentTime } = event;
+
+        let tR = this._elems.timeReadout,
+            dR = this._elems.dateReadout;
+
+        if (tR) {
+            let hours = pad(currentTime.getHours(), 2),
+                mins =  pad(currentTime.getMinutes(), 2),
+                secs = pad(currentTime.getSeconds(), 2);
+
+            tR.innerHTML = `${hours} : ${mins} : ${secs}`;
+        }
+
+        if (dR) {
+            // Check if DateFormatter is configure
+            //  if not, instantiate new default one
+            if (!this._options.formatter)
+                this._options.formatter = new DateFormatter();
+
+            dR.innerHTML = this._options.formatter.format(currentTime);
+        }
+    }
+}

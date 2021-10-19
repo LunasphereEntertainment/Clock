@@ -21,3 +21,18 @@ function simplifyRotation(rotDeg) {
 
     return rotDeg;
 }
+
+function pad(text, len) {
+    if (arguments.length < 2) {
+        len = 2;
+    }
+    if (typeof text !== "string") {
+        text = text.toString();
+    }
+
+    while (text.length < len) {
+        text = "0" + text;
+    }
+
+    return text;
+}
