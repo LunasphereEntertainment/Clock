@@ -9,32 +9,70 @@
 
     transition: .25s;
     position: relative;
+
+    transition: 1s;
+}
+
+.clock-container.expanded {
+    transform: rotateY(35deg) rotateX(-15deg);
 }
 
 .clock-container > .hand {
     border-radius: 50%;
     position: absolute;
-    left: 50%;
-    top: 5px;
+
+    margin: 0; padding: 0;
 
     transition: .25s;
 
     border: 2px solid var(--luna-text);
-    background: var(--luna-bg-dark);
 
-    z-index: 100;
+    z-index: -1;
 }
 
-.hand.hours {
-    width: 20px;
-    height: 20px;
+#hours {
+    width: 105%;
+    height: 105%;
 
-    transform-origin: 10px -50%;
+    top: -2.5%;
+    left: -2.5%;
+
+    clip-path: polygon(0 0, 40% 0, 46% 15%, 54% 15%, 60% 0, 100% 0);
+    /*width: 20px;
+    height: 20px;*/
+    /*box-shadow: 0px 3px 2px 1px rgb(0, 64, 89);*/
+    background: var(--luna-blue-1);
+}
+
+#hours:before, #hours:after {
+    content: '';
+    position: absolute;
+    top: 0px;
+    height: 100%;
+    width: 25%;
+
+    background: gray;
+}
+
+#hours:before {
+    right: -25px; /* equal to -1 * width of pseudo-element */
+    transform-origin: left; /* don't change */
+    transform: perspective(10px) rotateY(10deg); /* can be changed as per need */
 }
 
 .hand.minutes {
-    width: 30px;
-    height: 30px;
+    width: 108%;
+    height: 108%;
 
-    transform-origin: 15px -50%;
+    top: -4%; left: -4%;
+
+    clip-path: polygon(0 0, 42% 0, 49% 10%, 51% 10%, 58% 0, 100% 0);
+    background: var(--luna-blue-2);
+
+    /*box-shadow: 0px 3px 2px 1px rgb(0, 64, 89);*/
+}
+
+.clock-container.expanded > .hand {
+    /*transform: translateY(100px);*/
+    box-shadow: 3px 5px #12e4ff;
 }

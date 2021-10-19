@@ -1,20 +1,13 @@
 
-.readout {
-    text-align: center;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    width: 100%;
-    transform: translate(-50%, -50%);
+#timeReadout {
+    font-size: 52pt;
 
-}
-
-#currentTime {
-    font-size: 46pt;
-
+    margin: 5px;
     /*animation: text-glow 1s infinite linear;*/
 }
 
-#currentDate {
+#dateReadout {
     font-size: 16pt;
+
+    margin: 8px;
 }

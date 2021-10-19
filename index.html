@@ -6,20 +6,31 @@
 
     <link href="css/animations.css" rel="stylesheet"/>
     <link href="css/colours.css" rel="stylesheet"/>
-    <link href="css/clock.css" rel="stylesheet"/>
+    <!--    <link href="css/clock.css" rel="stylesheet"/>-->
+    <link href="css/clock2.css" rel="stylesheet"/>
+
     <link href="css/layout.css" rel="stylesheet"/>
     <link href="css/readout.css" rel="stylesheet"/>
 </head>
 <body>
 <h1 class="app-title">Clock.exe</h1>
 
-<div class="clock-container" id="clock">
-    <div class="hand hours" id="hours"></div>
-    <div class="hand minutes" id="mins"></div>
+<div class="container" id="clock" onclick="toggleClass(event, 'expanded')" title="Click for Spinny Things">
+    <div class="clock">
 
-    <div class="readout">
-        <div id="currentTime">XX : XX : XX</div>
-        <div id="currentDate"></div>
+        <div class="clock face">
+            <h1 id="timeReadout">20 : 50 : 31</h1>
+            <h3 id="dateReadout"></h3>
+        </div>
+
+        <div class="clock hand">
+            <img src="assets/ClockHand.png" id="hours"/>
+        </div>
+
+        <div class="clock hand">
+            <img src="assets/ClockHand.png" id="minutes"/>
+        </div>
+
     </div>
 </div>
 
@@ -29,9 +40,9 @@
 
 <footer>
     <div class="nav-menu">
-        <button onclick="switchNav('clock')">Current Time</button>
-        <button onclick="switchNav('stopwatch')">Stopwatch</button>
-        <button onclick="switchNav('timer')">Timer</button>
+        <button>Current Time</button>
+        <button class="disabled">Stopwatch</button>
+        <button class="disabled">Timer</button>
     </div>
 </footer>
 
@@ -47,114 +58,27 @@
     function switchNav(panelName) {
         if (navs[panelName]) {
             for (let panel of Object.values(navs)) {
-                panel.className += " nav-closing";
+                if (panel.id !== panelName)
+                    panel.classList.add('nav-closing');
+                else
+                    panel.classList.remove('nav-closing');
+                // panel.className += " nav-closing";
             }
 
             setTimeout(() => {
-                for (let panel of navs) {
+                for (let panel of Object.values(navs)) {
                     panel.style.display = "none";
                 }
 
                 navs[panelName].style.display = "block";
-                navs[panelName].className.replace(" nav-closing", " nav-open");
+                navs[panelName].classList.add("nav-open");
             }, 1000);
         }
     }
 
 </script>
 
-<script type="text/javascript">
-    const langs = ["eng"];
-    let selectedLanguage = langs[0],
-        lang = null;
+<script type="text/javascript" src="assets/clock.exe.js"></script>
 
-
-    function loadLanguage() {
-        fetch(`/dates.${selectedLanguage}.json`).then((res) => {
-            res.json().then((language) => {
-                lang = language;
-                update();
-            });
-        })
-    }
-
-    loadLanguage();
-
-    function getDateEnding(dayOfMonth) {
-        if (dayOfMonth < 11 || dayOfMonth > 19) {
-            if (dayOfMonth.toString().endsWith("1")) {
-                return "st";
-            } else if (dayOfMonth.toString().endsWith("2")) {
-                return "nd";
-            } else if (dayOfMonth.toString().endsWith("3")) {
-                return "rd";
-            }
-        }
-        return "th";
-    }
-
-    let currentTime = new Date(),
-        timeOut = document.getElementById("currentTime"),
-        dateOut = document.getElementById("currentDate");
-
-    function pad(text, len) {
-        if (arguments.length < 2) {
-            len = 2;
-        }
-        if (typeof text !== "string") {
-            text = text.toString();
-        }
-
-        while (text.length < len) {
-            text = "0" + text;
-        }
-
-        return text;
-    }
-
-    function updateTime() {
-        currentTime = new Date();
-    }
-
-    function updateDigital() {
-        const hours = pad(currentTime.getHours()),
-            mins = pad(currentTime.getMinutes()),
-            secs = pad(currentTime.getSeconds());
-
-        timeOut.innerHTML = `${hours} : ${mins} : ${secs}`;
-
-        if (lang) {
-            const dayOfWeek = lang.daysOfWeek[currentTime.getDay()],
-                dayOfMonth = currentTime.getDate(),
-                monthName = lang.months[currentTime.getMonth()],
-                year = currentTime.getFullYear(),
-                ending = getDateEnding(dayOfMonth);
-
-            dateOut.innerHTML = `${dayOfWeek} &nbsp; ${dayOfMonth}${ending} &nbsp; ${monthName} ${year}`;
-        }
-    }
-
-    function updateAnalog() {
-        const
-            hourPercent = currentTime.getHours() / 12,
-            minPercent = currentTime.getMinutes() / 60,
-            hourHand = document.getElementById("hours"),
-            minHand = document.getElementById("mins");
-
-        hourHand.style.transform = `rotate(${hourPercent * 360}deg)`;
-        minHand.style.transform = `rotate(${minPercent * 360}deg)`;
-    }
-
-    function update() {
-        updateTime();
-
-        updateDigital();
-
-        updateAnalog();
-    }
-
-    // update();
-
-    window.setInterval(update, 1000);
-</script>
+<script type="text/javascript" src="assets/util.js"></script>
 </html>

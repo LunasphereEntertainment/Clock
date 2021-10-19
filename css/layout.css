@@ -72,7 +72,34 @@ footer {
 
 
 .nav-closing {
-    transition: 1s;
+    /*transition: 1s;
     opacity: 0;
-    transform: translateX(150%);
+    transform: translateX(150%);*/
+    animation: slide-off 1s forwards;
+}
+
+.nav-open {
+    /*animation: slide-on 1s forwards;*/
+}
+
+@keyframes slide-on {
+    from {
+        transform: translateX(150%);
+        opacity: 0;
+    }
+    to {
+        transform: none;
+        opacity: 1;
+    }
+}
+
+@keyframes slide-off {
+    from {
+        transform: none;
+        opacity: 1;
+    }
+    to {
+        transform: translateX(150%);
+        opacity: 0;
+    }
 }
