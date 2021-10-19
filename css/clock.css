@@ -1,0 +1,40 @@
+.clock-container {
+    width: 60vw;
+    height: 70vh;
+}
+
+.clock-container {
+    border-radius: 50%;
+    animation: glow 3s infinite alternate;
+
+    transition: .25s;
+    position: relative;
+}
+
+.clock-container > .hand {
+    border-radius: 50%;
+    position: absolute;
+    left: 50%;
+    top: 5px;
+
+    transition: .25s;
+
+    border: 2px solid var(--luna-text);
+    background: var(--luna-bg-dark);
+
+    z-index: 100;
+}
+
+.hand.hours {
+    width: 20px;
+    height: 20px;
+
+    transform-origin: 10px -50%;
+}
+
+.hand.minutes {
+    width: 30px;
+    height: 30px;
+
+    transform-origin: 15px -50%;
+}

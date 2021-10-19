@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <link href="css/colours.css" rel="stylesheet"/>
+
+    <style>
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .luna-timepicker-container {
+            overflow-y: hidden;
+
+            text-align: center;
+
+            display: flex;
+            flex-direction: column;
+        }
+
+        ::-webkit-scrollbar {
+            width: 0; /* Remove scrollbar space */
+            background: transparent; /* Optional: just make scrollbar invisible */
+        }
+
+        .luna-timepicker-options-container {
+            overflow: hidden;
+            height: 500px;
+        }
+
+        .luna-timepicker-options {
+            display: flex;
+            flex-direction: column;
+
+            justify-content: center;
+            pointer-events: none;
+
+            transition: .1s;
+        }
+
+        h3 {
+            padding: 0;
+            margin: 0;
+        }
+
+        h3.selection {
+            font-size: 3.2em;
+            font-weight: bold;
+
+            margin: 2px 0;
+
+            transition: .3s;
+        }
+    </style>
+</head>
+<body>
+
+<h6 style="color: red" id="errOut"></h6>
+
+
+<div class="luna-timepicker-container" id="timepicker" style="width: 100%; font-size: 2.4em">
+    <button style="font-size: 32pt;" onclick="selectPrev()">⬆</button>
+    <div class="luna-timepicker-options-container">
+        <div class="luna-timepicker-options"></div>
+    </div>
+    <button style="font-size: 32pt;" onclick="selectNext()">⬇</button>
+</div>
+
+
+
+<!--<luna-timepicker></luna-timepicker>-->
+
+</body>
+<script type="text/javascript">
+    const timepicker = document.getElementById("timepicker"),
+        svg = timepicker.querySelector("div");
+    let lastScrollTop = 0, selectedIndex = 0, sensitivity = 50, numberHeight;
+
+    function selectPrev() {
+        selectedIndex--;
+
+        if (selectedIndex < 0)
+            selectedIndex += 60;
+
+        renderSelection();
+    }
+
+    function selectNext() {
+        selectedIndex++;
+        if (selectedIndex > 59)
+            selectedIndex -= 60;
+
+        renderSelection();
+    }
+
+
+    let lastY, isActive = false;
+
+    function handleMouse(e) {
+        e.preventDefault();
+        if (!isActive)
+            return
+
+        let y = e.clientY;
+
+        if (lastY == undefined) {
+            lastY = y;
+            return;
+        } else if (Math.abs(y - lastY) < sensitivity) {
+            return;
+        }
+
+        if (y > lastY) {
+            selectNext();
+        } else if (y < lastY) {
+            selectPrev();
+        }
+
+        lastY = y;
+    }
+
+    function handleTouch(e) {
+        e.preventDefault();
+        let y = e.touches[0].clientY;
+
+        if (lastY == undefined) {
+            lastY = y;
+            return;
+        } else if (Math.abs(y - lastY) < sensitivity) {
+            return;
+        }
+
+        if (y > lastY) {
+            selectNext();
+        } else if (y < lastY) {
+            selectPrev();
+        }
+
+        lastY = e.y;
+    }
+
+    /*function handleMovement(e) {
+        let y = e.touches && e.touches.length > 0 ? e.touches[0].clientY : e.y;
+
+        e.preventDefault ? e.preventDefault() : 0;
+        if (!isActive) {
+            return;
+        }
+
+    }*/
+
+    const console = {};
+    console.log = function (arg) {
+        let msg = "";
+        if (typeof arg === "object") {
+            msg = JSON.stringify(arg);
+        } else {
+            msg = arg.toString();
+        }
+        document.getElementById("errOut").innerText = msg;
+    }
+
+    function activateControl() {
+        isActive = true;
+    }
+
+    function deactivateControl() {
+        isActive = false;
+    }
+
+    // timepicker.addEventListener('touchstart', activateControl);
+    // timepicker.addEventListener('touchend', deactivateControl);
+    timepicker.addEventListener('touchmove', handleTouch);
+    timepicker.addEventListener('mousemove', handleMouse);
+    timepicker.addEventListener('mousedown', activateControl);
+    timepicker.addEventListener('mouseup', deactivateControl);
+
+    function renderSelection() {
+        const numbers = svg.querySelectorAll("h3");
+        numbers.forEach((elem) => {
+            elem.classList.remove("selection");
+        });
+
+        numbers[selectedIndex].classList.add("selection");
+
+        if (!numberHeight) {
+            let numberStyle = getComputedStyle(numbers[0]);
+                numberHeight = parseFloat(numberStyle.height.replace("px", ""));
+        }
+
+        svg.style.transform = `translateY(${(selectedIndex - 3) * -numberHeight}px)`;
+    }
+
+    function init() {
+        // let svg = timepicker.querySelector("svg");
+
+        for (let i = 0; i < 60; i++) {
+            const num = document.createElement("h3");
+            num.innerText = i.toString();
+
+            /*const num = document.createElementNS("http://www.w3.org/2000/svg", "text");
+
+            num.setAttribute("fill", "#00a0f0");
+            num.setAttribute("x", "100");
+            num.setAttribute("y", (i * 20).toString());
+            num.innerHTML = i.toString();*/
+
+            if (i === selectedIndex) {
+                num.classList.add("selection");
+            }
+
+            svg.appendChild(num);
+        }
+    }
+
+    init();
+
+</script>
+</html>
