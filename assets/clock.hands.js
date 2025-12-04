@@ -49,7 +49,6 @@ class MinutesHand extends ClockHand {
      */
     updatePosition({ time }) {
         const progress = time.getMinutes() / 60;
-        // console.log("minutes hand reporting in", progress.toFixed(2) + "%")
         this.hand.style.transform = `rotate(${progress * 360}deg)`;
     }
 }
@@ -60,7 +59,6 @@ class HourHand extends ClockHand {
      */
     updatePosition({ time }) {
         const progress = time.getHours() / 24;
-        // console.log("hours hand reporting in", progress.toFixed(2) + "%")
         this.hand.style.transform = `rotate(${progress * 360}deg)`;
     }
 }
