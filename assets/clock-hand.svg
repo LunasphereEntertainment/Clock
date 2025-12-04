@@ -1,0 +1,21 @@
+<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+    <circle 
+        cx="250" 
+        cy="250" 
+        r="220" 
+        fill="currentColor"
+        fill-opacity="0.15" 
+        stroke="currentColor" 
+        stroke-width="5" />
+
+    <path d="
+        M220 5
+        L280 5
+        L290 33
+        A220 220 0 0 0 210 33
+        Z"
+        fill="currentColor"
+        fill-opacity="0.8"
+        stroke-width="4" 
+        stroke="currentColor" />
+</svg>

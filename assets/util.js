@@ -1,38 +1,13 @@
-function toggleClass(e, cn) {
-    if (e.target.className.indexOf(cn) !== -1) {
-        e.target.classList.remove(cn);
-    } else {
-        e.target.classList.add(cn);
-    }
-}
-
-function clamp(num, min, max) {
-    let retVal = Math.min(num, max);
-    return Math.max(retVal, min)
-}
-
-function simplifyRotation(rotDeg) {
-    while (rotDeg > 360) {
-        rotDeg -= 360;
-    }
-    while (rotDeg < 0) {
-        rotDeg += 360;
-    }
-
-    return rotDeg;
-}
-
-function pad(text, len) {
-    if (arguments.length < 2) {
-        len = 2;
-    }
-    if (typeof text !== "string") {
-        text = text.toString();
-    }
-
-    while (text.length < len) {
-        text = "0" + text;
-    }
-
-    return text;
+/**
+ * 
+ * @param {keyof HTMLElementTagNameMap} tagName tag of element to create
+ * @param {string} classNames optional list of class names to apply to the new element
+ * @param {CSSStyleDeclaration} style optional collection of in-line styles to apply to the element
+ * @returns 
+ */
+function createElement(tagName, classNames, style) {
+    const elem = document.createElement(tagName);
+    if (classNames) elem.className = classNames;
+    if (style) elem.style = style;
+    return elem;
 }

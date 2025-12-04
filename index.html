@@ -1,98 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Clock - Lunasphere</title>
 
-    <link href="css/animations.css" rel="stylesheet"/>
-    <link href="css/colours.css" rel="stylesheet"/>
-    <!--    <link href="css/clock.css" rel="stylesheet"/>-->
-    <link href="css/clock2.css" rel="stylesheet"/>
-
-    <link href="css/layout.css" rel="stylesheet"/>
-    <link href="css/readout.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="css/themes.css" />
+    <link rel="stylesheet" href="css/clock.app.css">
+    
 </head>
-<body>
-<h1 class="app-title">Clock.exe</h1>
 
-<div class="container" id="clock" onclick="toggleClass(event, 'expanded')" title="Click for Spinny Things">
-    <div class="clock">
+<body data-theme="pink">
 
-        <div class="clock face">
-            <h1 id="timeReadout">XX : XX : XX</h1>
-            <h3 id="dateReadout"></h3>
-        </div>
+    <header>
+        <h2 class="app-title">Clock.exe</h1>
 
-        <div class="clock hand">
-            <img src="assets/ClockHand.png" id="hours" alt="Hours outer-circle indicator hand"/>
-        </div>
+        <button class="theme-switch-btn" role="button" onclick="cycleTheme()">🖌️ Theme</button>
+    </header>
 
-        <div class="clock hand">
-            <img src="assets/ClockHand.png" id="minutes" alt="Minutes outer-circle indicator hand"/>
-        </div>
+    <main class="container" title="Click for Spinny Things">
+        <luna-clock></luna-clock>
+    </main>
 
-    </div>
-</div>
-
-<div id="stopwatch"></div>
-
-<div id="timer"></div>
-
-<footer>
-    <div class="nav-menu">
-        <button>Current Time</button>
-        <button class="disabled">Stopwatch</button>
-        <button class="disabled">Timer</button>
-    </div>
-</footer>
-
+    <clock-nav>
+        <a>Current Time</a>
+        <a>Stopwatch</a>
+        <a>Timer</a>
+    </clock-nav>
 </body>
 
-<script type="text/javascript">
-    const navs = {
-        clock: document.getElementById("clock"),
-        stopwatch: document.getElementById("stopwatch"),
-        timer: document.getElementById("timer")
-    };
-
-    function switchNav(panelName) {
-        if (navs[panelName]) {
-            for (let panel of Object.values(navs)) {
-                if (panel.id !== panelName)
-                    panel.classList.add('nav-closing');
-                else
-                    panel.classList.remove('nav-closing');
-                // panel.className += " nav-closing";
-            }
-
-            setTimeout(() => {
-                for (let panel of Object.values(navs)) {
-                    panel.style.display = "none";
-                }
-
-                navs[panelName].style.display = "block";
-                navs[panelName].classList.add("nav-open");
-            }, 1000);
-        }
-    }
-
-</script>
-
-<!--<script type="text/javascript" src="assets/clock.old"></script>-->
-<script type="text/javascript" src="assets/formatters.js"></script>
-<script type="text/javascript" src="assets/clock.exe.js"></script>
-
-<script type="text/javascript">
-    window.onload = function() {
-        const analog = new AnalogClockRenderer('#clock');
-        const digital = new DigitalClockRenderer('#clock');
-
-        const clock = new Clock();
-
-        clock.registerListener('analog', analog.update.bind(analog));
-        clock.registerListener('digital', digital.update.bind(digital));
-    }
-</script>
-
 <script type="text/javascript" src="assets/util.js"></script>
+
+<script>
+    const themes = ['pink', 'blue', 'green', 'purple'];
+
+    const cycleTheme = () => {
+        const currentTheme = document.body.getAttribute('data-theme');
+
+        let currentIndex = themes.indexOf(currentTheme);
+        currentIndex += 1;
+
+        if (currentIndex > themes.length - 1) currentIndex = 0;
+
+        document.body.setAttribute('data-theme', themes[currentIndex]);
+    }
+</script>
+
+<script type="text/javascript" src="assets/navigation.js"></script>
+<script type="text/javascript" src="assets/clock.js"></script>
+<script type="text/javascript" src="assets/formatters.js"></script>
+<script type="text/javascript" src="assets/clock.face.js"></script>
+<script type="text/javascript" src="assets/clock.hands.js"></script>
+
+
 </html>

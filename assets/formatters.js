@@ -1,3 +1,20 @@
+class TimeFormatter {
+    constructor() { }
+
+    /**
+     * 
+     * @param {Date} date currentTime as a date object.
+     * @returns {string} formatted time string as HH : MM : SS
+     */
+    format(date) {
+        const hours = date.getHours().toString().padStart(2, '0'),
+            mins = date.getMinutes().toString().padStart(2, '0'),
+            secs = date.getSeconds().toString().padStart(2, '0');
+
+        return `${hours} : ${mins} : ${secs}`;
+    }
+}
+
 class DateFormatter {
     constructor(lang) {
         this._selectedLanguage = lang || "eng";
