@@ -16,7 +16,7 @@
     <header>
         <h2 class="app-title">Clock.exe</h1>
 
-        <button class="theme-switch-btn" role="button" onclick="cycleTheme()">🖌️ Theme</button>
+        <button class="theme-switch-btn" role="button" onclick="Theme.cycleTheme()">🖌️ Theme</button>
     </header>
 
     <main class="container" title="Click for Spinny Things">
@@ -31,27 +31,12 @@
 </body>
 
 <script type="text/javascript" src="assets/util.js"></script>
-
-<script>
-    const themes = ['pink', 'blue', 'green', 'purple'];
-
-    const cycleTheme = () => {
-        const currentTheme = document.body.getAttribute('data-theme');
-
-        let currentIndex = themes.indexOf(currentTheme);
-        currentIndex += 1;
-
-        if (currentIndex > themes.length - 1) currentIndex = 0;
-
-        document.body.setAttribute('data-theme', themes[currentIndex]);
-    }
-</script>
-
 <script type="text/javascript" src="assets/navigation.js"></script>
 <script type="text/javascript" src="assets/clock.js"></script>
 <script type="text/javascript" src="assets/formatters.js"></script>
 <script type="text/javascript" src="assets/clock.face.js"></script>
 <script type="text/javascript" src="assets/clock.hands.js"></script>
+<script type="text/javascript" src="assets/theme.js"></script>
 
 
 </html>

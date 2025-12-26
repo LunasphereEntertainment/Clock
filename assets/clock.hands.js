@@ -58,7 +58,7 @@ class HourHand extends ClockHand {
      * @param {ClockTickEvent} time
      */
     updatePosition({ time }) {
-        const progress = time.getHours() / 24;
+        const progress = (time.getHours() % 12) / 12;
         this.hand.style.transform = `rotate(${progress * 360}deg)`;
     }
 }

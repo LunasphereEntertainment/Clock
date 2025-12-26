@@ -17,6 +17,8 @@ class TimeFormatter {
 
 class DateFormatter {
     constructor(lang) {
+        lang ??= navigator.language.substring(0, navigator.language.indexOf("-"));
+
         this._selectedLanguage = lang || "eng";
         this._language = {
             daysOfWeek: [],

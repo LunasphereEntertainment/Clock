@@ -1,0 +1,31 @@
+{
+  "daysOfWeek": [
+    "Sonntag",
+    "Montag",
+    "Dienstag",
+    "Mittwoch",
+    "Donnerstag",
+    "Freitag",
+    "Samstag"
+  ],
+  "months": [
+    "Januar",
+    "Februar",
+    "März",
+    "April",
+    "Mai",
+    "Juni",
+    "Juli",
+    "August",
+    "September",
+    "Oktober",
+    "November",
+    "Dezember"
+  ],
+  "dateEnds": {
+    "default": "th",
+    "1": "st",
+    "2": "nd",
+    "3": "rd"
+  }
+}
